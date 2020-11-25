@@ -47,15 +47,14 @@ public class ExchangeSenderApp {
                 String message = consoleReader.readLine();
                 if ("end".equals(message.toLowerCase())) {
                     break;
-                }
-                if ("j".equals(message.split(" ")[0])) {
-                    sendMessage(message.split(" ")[1], ThemeOfArticle.JAVA);
-                }
-                if ("c".equals(message.split(" ")[0])) {
-                    sendMessage(message.split(" ")[1], ThemeOfArticle.C);
-                }
-                if ("p".equals(message.split(" ")[0])) {
-                    sendMessage(message.split(" ")[1], ThemeOfArticle.PHP);
+                } else if ("j".equals(message.split(" ", 2)[0])) {
+                    sendMessage(message.split(" ", 2)[1], ThemeOfArticle.JAVA);
+                } else if ("c".equals(message.split(" ", 2)[0])) {
+                    sendMessage(message.split(" ", 2)[1], ThemeOfArticle.C);
+                } else if ("p".equals(message.split(" ", 2)[0])) {
+                    sendMessage(message.split(" ", 2)[1], ThemeOfArticle.PHP);
+                } else {
+                    System.out.println("Неизвестная команда " + "'" + message.split(" ", 2)[0] + "'");
                 }
             } catch (IOException e) {
                 e.printStackTrace();

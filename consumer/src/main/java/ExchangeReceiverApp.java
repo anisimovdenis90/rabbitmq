@@ -46,21 +46,18 @@ public class ExchangeReceiverApp {
                 String consoleMessage = consoleReader.readLine();
                 if ("j".equals(consoleMessage.toLowerCase())) {
                     themeBinding(ThemeOfArticle.JAVA);
-                }
-                if ("c".equals(consoleMessage.toLowerCase())) {
+                } else if ("c".equals(consoleMessage.toLowerCase())) {
                     themeBinding(ThemeOfArticle.C);
-                }
-                if ("p".equals(consoleMessage.toLowerCase())) {
+                } else if ("p".equals(consoleMessage.toLowerCase())) {
                     themeBinding(ThemeOfArticle.PHP);
-                }
-                if ("uj".equals(consoleMessage.toLowerCase())) {
+                } else if ("uj".equals(consoleMessage.toLowerCase())) {
                     themeUnBinding(ThemeOfArticle.JAVA);
-                }
-                if ("uc".equals(consoleMessage.toLowerCase())) {
+                } else if ("uc".equals(consoleMessage.toLowerCase())) {
                     themeUnBinding(ThemeOfArticle.C);
-                }
-                if ("up".equals(consoleMessage.toLowerCase())) {
+                } else if ("up".equals(consoleMessage.toLowerCase())) {
                     themeUnBinding(ThemeOfArticle.PHP);
+                } else {
+                    System.out.println("Неизвестная команда " + "'" + consoleMessage + "'");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
