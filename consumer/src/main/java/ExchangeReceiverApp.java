@@ -33,32 +33,40 @@ public class ExchangeReceiverApp {
     public static void main(String[] argv) {
         start();
 
-        System.out.println("Укажите тему:");
-        System.out.println("j - статьи по JAVA");
-        System.out.println("c - статьи по C");
-        System.out.println("p - статьи по PHP");
+        System.out.println("Команды:");
+        System.out.println("j - подписка на статьи по JAVA");
+        System.out.println("c - подписка на статьи по C");
+        System.out.println("p - подписка на статьи по PHP");
+        System.out.println("uj - отписаться от статей по JAVA");
+        System.out.println("uc - отписаться от статей по C");
+        System.out.println("up - отписаться от статей по PHP");
 
         while (true) {
             try {
                 String consoleMessage = consoleReader.readLine();
                 if ("j".equals(consoleMessage.toLowerCase())) {
                     themeBinding(ThemeOfArticle.JAVA);
-                    break;
                 }
                 if ("c".equals(consoleMessage.toLowerCase())) {
                     themeBinding(ThemeOfArticle.C);
-                    break;
                 }
                 if ("p".equals(consoleMessage.toLowerCase())) {
                     themeBinding(ThemeOfArticle.PHP);
-                    break;
+                }
+                if ("uj".equals(consoleMessage.toLowerCase())) {
+                    themeUnBinding(ThemeOfArticle.JAVA);
+                }
+                if ("uc".equals(consoleMessage.toLowerCase())) {
+                    themeUnBinding(ThemeOfArticle.C);
+                }
+                if ("up".equals(consoleMessage.toLowerCase())) {
+                    themeUnBinding(ThemeOfArticle.PHP);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        System.out.println(" [*] Waiting for messages");
     }
 
 
@@ -71,6 +79,11 @@ public class ExchangeReceiverApp {
             channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
             queueName = channel.queueDeclare().getQueue();
             System.out.println("My queue name: " + queueName);
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println(" [x] Received '" + message + "'");
+            };
+            channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
@@ -79,22 +92,19 @@ public class ExchangeReceiverApp {
     private static void themeBinding(ThemeOfArticle themeOfArticle) {
         try {
             channel.queueBind(queueName, EXCHANGE_NAME, themeOfArticle.getName());
-            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-                String message = new String(delivery.getBody(), "UTF-8");
-                System.out.println(" [x] Received '" + message + "'");
-            };
-            channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
+            System.out.println(" [*] " + themeOfArticle.getName().toUpperCase() + " article enabled");
+            System.out.println(" [*] Waiting for messages");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    private static void stop() {
+    private static void themeUnBinding(ThemeOfArticle themeOfArticle) {
         try {
-            connection.close();
-            channel.close();
-        } catch (IOException | TimeoutException e) {
+            channel.queueUnbind(queueName, EXCHANGE_NAME, themeOfArticle.getName());
+            System.out.println(" [*] " + themeOfArticle.getName() + " article disabled");
+            System.out.println(" [*] Waiting for messages");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

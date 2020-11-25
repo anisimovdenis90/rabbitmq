@@ -40,7 +40,7 @@ public class ExchangeSenderApp {
         System.out.println("end - завершение работы");
         System.out.println("j +текст_статьи - статья по JAVA");
         System.out.println("c +текст_статьи - статья по C#");
-        System.out.println("P +текст_статьи - статья по PHP");
+        System.out.println("p +текст_статьи - статья по PHP");
 
         while (true) {
             try {
