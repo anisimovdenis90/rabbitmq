@@ -27,20 +27,20 @@ public class ExchangeSenderApp {
     }
 
     private static final String EXCHANGE_NAME = "ITBlog";
+    private static final String COMMANDS = String.format("Консольные команды:%n" +
+            "end - завершение работы%n" +
+            "j +текст_статьи - статья по JAVA%n" +
+            "c +текст_статьи - статья по C#%n" +
+            "p +текст_статьи - статья по PHP");
 
     private static BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
     private static Connection connection;
     private static Channel channel;
 
-
     public static void main(String[] argv) {
         start();
 
-        System.out.println("Консольные команды:");
-        System.out.println("end - завершение работы");
-        System.out.println("j +текст_статьи - статья по JAVA");
-        System.out.println("c +текст_статьи - статья по C#");
-        System.out.println("p +текст_статьи - статья по PHP");
+        System.out.println(COMMANDS);
 
         while (true) {
             try {

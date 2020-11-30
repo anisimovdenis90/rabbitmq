@@ -24,6 +24,14 @@ public class ExchangeReceiverApp {
     }
 
     private static final String EXCHANGE_NAME = "ITBlog";
+    private static final String COMMANDS = String.format("Консольные команды:%n" +
+            "end - завершение работы%n" +
+            "j - подписка на статьи по JAVA%n" +
+            "c - подписка на статьи по C%n" +
+            "p - подписка на статьи по PHP%n" +
+            "uj - отписаться от статей по JAVA%n" +
+            "uc - отписаться от статей по C%n" +
+            "up - отписаться от статей по PHP");
 
     private static BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
     private static Connection connection;
@@ -33,18 +41,15 @@ public class ExchangeReceiverApp {
     public static void main(String[] argv) {
         start();
 
-        System.out.println("Команды:");
-        System.out.println("j - подписка на статьи по JAVA");
-        System.out.println("c - подписка на статьи по C");
-        System.out.println("p - подписка на статьи по PHP");
-        System.out.println("uj - отписаться от статей по JAVA");
-        System.out.println("uc - отписаться от статей по C");
-        System.out.println("up - отписаться от статей по PHP");
+        System.out.println(COMMANDS);
 
         while (true) {
             try {
                 String consoleMessage = consoleReader.readLine();
-                if ("j".equals(consoleMessage.toLowerCase())) {
+                if ("end".equals(consoleMessage.toLowerCase())) {
+                    stop();
+                    break;
+                } else if ("j".equals(consoleMessage.toLowerCase())) {
                     themeBinding(ThemeOfArticle.JAVA);
                 } else if ("c".equals(consoleMessage.toLowerCase())) {
                     themeBinding(ThemeOfArticle.C);
@@ -65,7 +70,6 @@ public class ExchangeReceiverApp {
         }
 
     }
-
 
     private static void start() {
         ConnectionFactory factory = new ConnectionFactory();
@@ -102,6 +106,16 @@ public class ExchangeReceiverApp {
             System.out.println(" [*] " + themeOfArticle.getName() + " article disabled");
             System.out.println(" [*] Waiting for messages");
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void stop() {
+        try {
+            channel.queueDelete(queueName);
+            connection.close();
+            channel.close();
+        } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
     }
